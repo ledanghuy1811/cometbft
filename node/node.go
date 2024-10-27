@@ -215,7 +215,7 @@ func BootstrapStateWithGenProvider(ctx context.Context, config *cfg.Config, dbPr
 		return fmt.Errorf("error in genesis doc: %w", err)
 	}
 
-	genState, err := loadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
+	genState, err := LoadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
 
 	if err != nil {
 		return err
@@ -327,7 +327,7 @@ func NewNodeWithContext(ctx context.Context,
 		return nil, fmt.Errorf("error in genesis doc: %w", err)
 	}
 
-	state, err := loadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
+	state, err := LoadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
 	if err != nil {
 		return nil, err
 	}

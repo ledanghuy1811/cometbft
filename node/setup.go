@@ -555,7 +555,7 @@ var genesisDocHashKey = []byte("genesisDocHash")
 // LoadStateFromDBOrGenesisDocProvider attempts to load the state from the
 // database, or creates one using the given genesisDocProvider. On success this also
 // returns the genesis doc loaded through the given provider.
-func loadStateFromDBOrGenesisDoc(
+func LoadStateFromDBOrGenesisDoc(
 	stateStore sm.Store,
 	stateDB dbm.DB,
 	genDoc *types.GenesisDoc,

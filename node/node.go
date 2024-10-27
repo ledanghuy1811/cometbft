@@ -203,7 +203,20 @@ func BootstrapStateWithGenProvider(ctx context.Context, config *cfg.Config, dbPr
 		return fmt.Errorf("state not empty, trying to initialize non empty state")
 	}
 
-	genState, _, err := LoadStateFromDBOrGenesisDocProvider(stateDB, genProvider)
+	// genState, _, err := LoadStateFromDBOrGenesisDocProvider(stateDB, genProvider)
+	genesisDocProvider := DefaultGenesisDocProviderFunc(config)
+	genDoc, err := genesisDocProvider()
+	if err != nil {
+		return err
+	}
+
+	err = genDoc.ValidateAndComplete()
+	if err != nil {
+		return fmt.Errorf("error in genesis doc: %w", err)
+	}
+
+	genState, err := loadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
+
 	if err != nil {
 		return err
 	}
@@ -303,7 +316,18 @@ func NewNodeWithContext(ctx context.Context,
 		DiscardABCIResponses: config.Storage.DiscardABCIResponses,
 	})
 
-	state, genDoc, err := LoadStateFromDBOrGenesisDocProvider(stateDB, genesisDocProvider)
+	// state, genDoc, err := LoadStateFromDBOrGenesisDocProvider(stateDB, genesisDocProvider)
+	genDoc, err := genesisDocProvider()
+	if err != nil {
+		return nil, err
+	}
+
+	err = genDoc.ValidateAndComplete()
+	if err != nil {
+		return nil, fmt.Errorf("error in genesis doc: %w", err)
+	}
+
+	state, err := loadStateFromDBOrGenesisDoc(stateStore, stateDB, genDoc)
 	if err != nil {
 		return nil, err
 	}
